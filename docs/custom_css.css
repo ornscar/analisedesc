@@ -32,17 +32,7 @@ pre {
   background-color: #e6f4ea;
 }
 
-.callout-important {
-  border-left: 5px solid #0dcaf0;
-  background-color: #e6f9fc;
-}
-
 .callout-warning {
-  border-left: 5px solid #ffc107;
-  background-color: #fff8e1;
-}
-
-.callout-caution {
   border-left: 5px solid #dc3545;
   background-color: #fdecea;
 }

@@ -197,11 +197,11 @@ class: middle, center, inverse
 #### Frequência absoluta
 
 ```{r echo=TRUE}
-# frequencia absoluta da va 'raca/cor' sem considerar na
-freq_abs <- table(dados1$cor); freq_abs
+# frequencia absoluta da va 'hac' sem considerar na
+freq_abs <- table(dados1$hac); freq_abs
 
-# frequencia absoluta da va 'raca/cor' considerando na
-freq_abs_na <- table(dados1$cor, useNA = "always"); freq_abs_na
+# frequencia absoluta da va 'hac' considerando na
+freq_abs_na <- table(dados1$hac, useNA = "always"); freq_abs_na
 ```
 
 ---
@@ -209,10 +209,10 @@ freq_abs_na <- table(dados1$cor, useNA = "always"); freq_abs_na
 #### Frequência relativa
 
 ```{r echo=TRUE}
-# frequencia relativa da va 'raca/cor' sem considerar na
+# frequencia relativa da va 'hac' sem considerar na
 prop.table(freq_abs)
 
-# frequencia relativa da va 'raca/cor' considerando na
+# frequencia relativa da va 'hac' considerando na
 prop.table(freq_abs_na)
 ```
 
