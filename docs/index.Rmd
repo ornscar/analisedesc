@@ -577,10 +577,10 @@ dados1 |>
     ),
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
-  ) |> 
-  # modificando os nomes do cabecalho
-  modify_header(label ~ "**Variável**") #<<
-``` 
+  ) |>
+  # incluindo o numero total de observacoes validas
+  add_n() #<<
+```  
 ] 
 
 .pull-right[
@@ -592,6 +592,48 @@ dados1 |>
 
 .pull-left[
 ```{r t8, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum, insulina),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                  
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
+      insulina ~ "Usou insulina antes do parto"
+    ),
+    # calculando as medidas de interesse
+    statistic = list(                                                        
+      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
+    ),
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") #<<
+``` 
+] 
+
+.pull-right[
+```{r t8-out, ref.label="t8", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t9, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # incluindo apenas as variaveis de interesse
@@ -618,6 +660,8 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
@@ -626,14 +670,14 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t8-out, ref.label="t8", out.width="90%", echo=FALSE, message=FALSE}
+```{r t9-out, ref.label="t9", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t9, paged.print=FALSE, eval=FALSE}
+```{r t10, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
@@ -661,6 +705,8 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
@@ -669,14 +715,14 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t9-out, ref.label="t9", out.width="90%", echo=FALSE, message=FALSE}
+```{r t10-out, ref.label="t10", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t10, paged.print=FALSE, eval=FALSE}
+```{r t11, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
@@ -704,6 +750,8 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
@@ -714,16 +762,16 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t10-out, ref.label="t10", out.width="90%", echo=FALSE, message=FALSE}
+```{r t11-out, ref.label="t11", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t11, paged.print=FALSE, eval=FALSE}
+```{r t12, paged.print=FALSE, eval=FALSE}
 # traduzindo a tabela para pt-br
-theme_gtsummary_language("pt", big.mark = ".", decimal.mark = ",")
+theme_gtsummary_language("pt", big.mark = ".", decimal.mark = ",") #<<
 
 tbl <- dados1 |> 
   tbl_summary(
@@ -764,7 +812,7 @@ tbl
 ] 
 
 .pull-right[
-```{r t11-out, ref.label="t11", out.width="90%", echo=FALSE, message=FALSE}
+```{r t12-out, ref.label="t12", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
