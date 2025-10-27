@@ -367,10 +367,10 @@ class: middle, center, inverse
 - Criado pelo [Daniel D. Sjoberg](https://www.danieldsjoberg.com), bioestatístico do Memorial Sloan Kettering Cancer Center (EUA).
 
 - Gera automaticamente tabelas com formatação elegante e profissional, prontas para relatórios, artigos científicos e apresentações.
-    
-- Repositório oficial: [https://github.com/ddsjoberg/gtsummary](https://github.com/ddsjoberg/gtsummary).
 
 - Infinitas possibilidades de customização!
+
+- Repositório oficial: [https://github.com/ddsjoberg/gtsummary](https://github.com/ddsjoberg/gtsummary).
 
 ### Outros pacotes
 
