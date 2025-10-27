@@ -383,17 +383,39 @@ class: middle, center, inverse
 #### Tabela descritiva da Base 1
 
 .pull-left[
-```{r t1, paged.print=FALSE, eval=FALSE, echo=TRUE}
+```{r f1, echo=FALSE, message=FALSE, warning=FALSE}
+# funcao para deixar tabela compacta
+compacta_tabela <- function(gt_obj) {
+  gt_obj |> 
+    gt::tab_options(
+      table.font.size = gt::px(11),        
+      column_labels.font.size = gt::px(11),
+      heading.title.font.size = gt::px(12),
+      data_row.padding = gt::px(2),        
+      row_group.padding = gt::px(2),
+      column_labels.padding = gt::px(2),
+      summary_row.padding = gt::px(2),
+      table_body.hlines.width = gt::px(0.5),
+      table.border.top.width = gt::px(0.5),
+      table.border.bottom.width = gt::px(0.5)
+    ) 
+}
+```
+
+```{r t1, paged.print=FALSE, eval=FALSE}
 library(gtsummary)
 
 # criando tabela gtsummary
 dados1 |> 
-  tbl_summary() #<<
+  tbl_summary() |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
 ``` 
 ] 
 
 .pull-right[
-```{r t1-out, ref.label="t1", out.width="90%", echo=FALSE, message=FALSE}
+```{r t1-out, ref.label="t1", out.width="50%", echo=FALSE, message=FALSE}
 ```
 ]
 
