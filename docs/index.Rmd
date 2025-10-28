@@ -855,10 +855,10 @@ tbl <- tbl |> as_gt()
 # carregando o pacote {gt}
 library(gt)
 
-# salvando imagem no formato png
+# salvando tabela no formato png
 gtsave(tbl, "tabelas/tbl_desc.png")
 
-# salvando imagem no formato docx
+# salvando tabela no formato docx
 gtsave(tbl, "tabelas/tbl_desc.docx")
 ```
 
