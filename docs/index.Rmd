@@ -424,7 +424,7 @@ dados1 |>
 .pull-left[
 ```{r t2, paged.print=FALSE, eval=FALSE}
 # incluindo tema a tabela
-theme_gtsummary_journal(journal = "lancet")
+theme_gtsummary_journal(journal = "lancet") #<<
 
 dados1 |> 
   tbl_summary(
