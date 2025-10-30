@@ -45,19 +45,19 @@
   /* Colors */
   --text-color: #333333;
   --header-color: #333333;
-  --background-color: #F4F4F4;
-  --link-color: #58B30D;
+  --background-color: #f4f4f4;
+  --link-color: #58b30d;
   --text-bold-color: #454545;
   --code-highlight-color: rgba(255,255,0,0.5);
-  --inverse-text-color: #F4F4F4;
+  --inverse-text-color: #f4f4f4;
   --inverse-background-color: #0000cd;
-  --inverse-header-color: #F4F4F4;
-  --inverse-link-color: #58B30D;
-  --title-slide-background-color: #F4F4F4;
-  --title-slide-text-color: #58B30D;
+  --inverse-header-color: #f4f4f4;
+  --inverse-link-color: #58b30d;
+  --title-slide-background-color: #f4f4f4;
+  --title-slide-text-color: #58b30d;
   --header-background-color: #333333;
-  --header-background-text-color: #F4F4F4;
-  --primary: #F4F4F4;
+  --header-background-text-color: #f4f4f4;
+  --primary: #f4f4f4;
   --secondary: #0000cd;
 }
 

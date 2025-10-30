@@ -37,9 +37,9 @@ xaringanExtra::use_clipboard()
 library(xaringanthemer)
 
 blue <- "#0000cd"
-offw <- "#F4F4F4"
+offw <- "#f4f4f4"
 gray <- "#333333"
-green <- "#58B30D"
+green <- "#58b30d"
 
 style_duo(
   # colors
@@ -197,11 +197,11 @@ class: middle, center, inverse
 #### Frequência absoluta
 
 ```{r echo=TRUE}
-# frequencia absoluta da va 'hac' sem considerar na
-freq_abs <- table(dados1$hac); freq_abs
+# frequencia absoluta da va 'historico de diabetes na familia' sem considerar na
+freq_abs <- table(dados1$hist_diab_fam); freq_abs
 
-# frequencia absoluta da va 'hac' considerando na
-freq_abs_na <- table(dados1$hac, useNA = "always"); freq_abs_na
+# frequencia absoluta da va 'historico de diabetes na familia' considerando na
+freq_abs_na <- table(dados1$hist_diab_fam, useNA = "always"); freq_abs_na
 ```
 
 ---
@@ -218,7 +218,7 @@ prop.table(freq_abs_na)
 
 <br>
 <div class="callout-tip">
-<b>Dica!</b><br><br>Use a função round() para arredondar os valores. Por exemplo, round(prop.table(freq_abs), 2).
+<b>Dica!</b><br><br>Use a função round() para ar#ff0000ondar os valores. Por exemplo, round(prop.table(freq_abs), 2).
 </div>
 
 ---
@@ -356,6 +356,18 @@ sd(dados2$gini)
 </div>
 
 ---
+
+### Medidas-resumo
+
+```{r}
+# medidas-resumo de todas as vas
+summary(dados1[, c("idade", "n_gestacoes", "glicemia_jejum")])
+
+# medidas-resumo da va 'idade'
+summary(dados1$idade)
+```
+
+---
 class: middle, center, inverse
 
 ## Tabelas descritivas
@@ -488,8 +500,8 @@ dados1 |>
       all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           #<<
     )                                                                        #<<
   )
-``` 
-] 
+```
+]
 
 .pull-right[
 ```{r t4-out, ref.label="t4", out.width="90%", echo=FALSE, message=FALSE}
@@ -507,25 +519,29 @@ dados1 |>
     # rotulando as variaveis
     label = list(                                            
       idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                              
+      imc_classe ~ "IMC",                                
       n_gestacoes ~ "N° de gestações anteriores",            
       hist_diab_fam ~ "Histórico de diabetes na família",    
-      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)" ,
       insulina ~ "Usou insulina antes do parto"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
-    # formatando numero de digitos
-    digits = list(                                                  #<<
-      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas        #<<
-      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %  #<<
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", #<<
+    # calculando as medidas de interesse     
+    statistic = list(                                               #<<                                    
+      all_continuous() ~  c(                                        #<<
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          #<<
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        #<<
+        "{min}, {max}" # minimo e maximo                            #<<
+      ),                                                            #<<
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  #<<
     )                                                               #<<
-  )
+  ) |> 
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
 ``` 
-] 
+]
 
 .pull-right[
 ```{r t5-out, ref.label="t5", out.width="90%", echo=FALSE, message=FALSE}
@@ -543,25 +559,32 @@ dados1 |>
     # rotulando as variaveis
     label = list(                                            
       idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                             
+      imc_classe ~ "IMC",                              
       n_gestacoes ~ "N° de gestações anteriores",            
       hist_diab_fam ~ "Histórico de diabetes na família",    
       glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
       insulina ~ "Usou insulina antes do parto"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),                                                               
     # formatando numero de digitos
-    digits = list(
-      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
-      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
-    ),
-    # alterando rotulo dos valores faltantes
-    missing_text = "NA" #<<
-  )
+    digits = list(                                                  #<<
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas        #<<
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %  #<<
+    )                                                               #<<
+  ) |> 
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
 ``` 
 ] 
 
@@ -581,28 +604,35 @@ dados1 |>
     # rotulando as variaveis
     label = list(                                            
       idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                                  
+      imc_classe ~ "IMC",                             
       n_gestacoes ~ "N° de gestações anteriores",            
       hist_diab_fam ~ "Histórico de diabetes na família",    
       glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
       insulina ~ "Usou insulina antes do parto"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
     # formatando numero de digitos
     digits = list(
       all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
       all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
     ),
     # alterando rotulo dos valores faltantes
-    missing_text = "NA"
-  ) |>
-  # incluindo o numero total de observacoes validas
-  add_n() #<<
-```  
+    missing_text = "NA" #<<
+  ) |> 
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
 ] 
 
 .pull-right[
@@ -627,11 +657,17 @@ dados1 |>
       glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
       insulina ~ "Usou insulina antes do parto"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
     # formatando numero de digitos
     digits = list(
       all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
@@ -639,12 +675,13 @@ dados1 |>
     ),
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
-  ) |> 
-  # incluindo numero total de observacoes validas
-  add_n() |> 
-  # modificando os nomes do cabecalho
-  modify_header(label ~ "**Variável**") #<<
-``` 
+  ) |>
+  # incluindo o numero total de observacoes validas
+  add_n() |>  #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+```  
 ] 
 
 .pull-right[
@@ -663,17 +700,23 @@ dados1 |>
     # rotulando as variaveis
     label = list(                                            
       idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                                    
+      imc_classe ~ "IMC",                                  
       n_gestacoes ~ "N° de gestações anteriores",            
       hist_diab_fam ~ "Histórico de diabetes na família",    
       glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
       insulina ~ "Usou insulina antes do parto"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
     # formatando numero de digitos
     digits = list(
       all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
@@ -685,9 +728,10 @@ dados1 |>
   # incluindo numero total de observacoes validas
   add_n() |> 
   # modificando os nomes do cabecalho
-  modify_header(label ~ "**Variável**") |> 
-  # formatando nomes das variaveis para negrito
-  bold_labels() #<<
+  modify_header(label ~ "**Variável**") |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
 ``` 
 ] 
 
@@ -702,23 +746,28 @@ dados1 |>
 ```{r t10, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
-    # analisando por grupo de desfecho
-    by = insulina, #<<
     # incluindo apenas as variaveis de interesse
-    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum, insulina),
     # rotulando as variaveis
     label = list(                                            
       idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                                   
+      imc_classe ~ "IMC",                                    
       n_gestacoes ~ "N° de gestações anteriores",            
       hist_diab_fam ~ "Histórico de diabetes na família",    
-      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
+      insulina ~ "Usou insulina antes do parto"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
     # formatando numero de digitos
     digits = list(
       all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
@@ -732,7 +781,10 @@ dados1 |>
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
-  bold_labels()
+  bold_labels() |>  #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
 ``` 
 ] 
 
@@ -748,21 +800,27 @@ dados1 |>
 dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
-    by = insulina,
+    by = insulina, #<<
     # incluindo apenas as variaveis de interesse
     include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
     # rotulando as variaveis
     label = list(                                            
       idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                                
+      imc_classe ~ "IMC",                                   
       n_gestacoes ~ "N° de gestações anteriores",            
       hist_diab_fam ~ "Histórico de diabetes na família",    
       glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
     ),
     # formatando numero de digitos
     digits = list(
@@ -778,8 +836,9 @@ dados1 |>
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
   bold_labels() |> 
-  # adicionando rótulo para estratificacao
-  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
 ``` 
 ] 
 
@@ -792,9 +851,245 @@ dados1 |>
 
 .pull-left[
 ```{r t12, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # analisando por grupo de desfecho
+    by = insulina,
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") |> 
+  # formatando nomes das variaveis para negrito
+  bold_labels() |> 
+  # adicionando rótulo para estratificacao
+  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |>  #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t12-out, ref.label="t12", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t13, paged.print=FALSE, eval=FALSE}
 # traduzindo a tabela para pt-br
 theme_gtsummary_language("pt", big.mark = ".", decimal.mark = ",") #<<
 
+dados1 |> 
+  tbl_summary(
+    # analisando por grupo de desfecho
+    by = insulina,
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") |> 
+  # formatando nomes das variaveis para negrito
+  bold_labels() |> 
+  # adicionando rótulo para estratificacao
+  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t13-out, ref.label="t13", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t14, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # analisando por grupo de desfecho
+    by = insulina,
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") |> 
+  # formatando nomes das variaveis para negrito
+  bold_labels() |> 
+  # adicionando rótulo para estratificacao
+  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
+  # adicionando rodape no cabecalho
+  modify_footnote_header( #<<
+    footnote = "Gestantes que realizaram o pré-natal entre os anos de 2012 e 2015.", #<<
+    columns = all_stat_cols(), #<<
+    replace = FALSE #<<
+  ) |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t14-out, ref.label="t14", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t15, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # analisando por grupo de desfecho
+    by = insulina,
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") |> 
+  # formatando nomes das variaveis para negrito
+  bold_labels() |> 
+  # adicionando rótulo para estratificacao
+  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
+  # adicionando rodape no cabecalho
+  modify_footnote_header( 
+    footnote = "Gestantes que realizaram o pré-natal entre os anos de 2012 e 2015.", 
+    columns = all_stat_cols(), 
+    replace = FALSE 
+  ) |> 
+  # adicionando rodape no corpo da tabela
+  modify_footnote_body( #<<
+    footnote = "Parentes de primeiro grau.", #<<
+    columns = "label", #<<
+    rows = variable == "hist_diab_fam" & row_type == "label" #<<
+  ) |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t15-out, ref.label="t15", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t16, paged.print=FALSE, eval=FALSE}
 tbl <- dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
@@ -809,11 +1104,17 @@ tbl <- dados1 |>
       hist_diab_fam ~ "Histórico de diabetes na família",    
       glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
     ),
-    # calculando as medidas de interesse
-    statistic = list(                                                        
-      all_continuous() ~ "{mean} ± {sd}", # media e dp p/ vas quantitativas  
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas           
-    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
     # formatando numero de digitos
     digits = list(
       all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
@@ -827,14 +1128,33 @@ tbl <- dados1 |>
   # formatando nomes das variaveis para negrito
   bold_labels() |> 
   # adicionando rótulo para estratificacao
-  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**")
+  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
+  # adicionando rodape no cabecalho
+  modify_footnote_header( 
+    footnote = "Gestantes que realizaram o pré-natal entre os anos de 2012 e 2015.", 
+    columns = all_stat_cols(), 
+    replace = FALSE 
+  ) |> 
+  # adicionando rodape no corpo da tabela
+  modify_footnote_body( 
+    footnote = "Parentes de primeiro grau.", 
+    columns = "label",
+    rows = variable == "hist_diab_fam" & row_type == "label" 
+  ) |> 
+  # adicionando rodape avulso
+  as_gt() |> #<<
+  gt::tab_source_note( #<<
+    gt::md("Fonte de dados: ambulatório de diabetes gestacional do HCFMUSP.") #<<
+  ) |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  compacta_tabela()
 
 tbl
 ``` 
 ] 
 
 .pull-right[
-```{r t12-out, ref.label="t12", out.width="90%", echo=FALSE, message=FALSE}
+```{r t16-out, ref.label="t16", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
@@ -843,11 +1163,6 @@ tbl
 ## Salvando uma tabela `gtsummary` no `r fontawesome::fa("r-project", fill = "#333333")`
 
 - A tabela precisa ser do tipo `gt`. Para transformá-la nesse formato, use a função `as_gt()`, do `{gtsummary}`.
-
-```{r}
-# tranformando a tabela de gtsummary para gt
-tbl <- tbl |> as_gt()
-```
 
 - Para salvar a tabela, execute a função `gtsave()`, do pacote `{gt}`.
 
@@ -1034,7 +1349,7 @@ ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))
 .pull-left[
 ```{r g5, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))) + 
-  geom_bar(color = "blue", fill = "white") #<<
+  geom_bar(color = "#0000cd", fill = "#ffffff") #<<
 ``` 
 ] 
 
@@ -1048,7 +1363,7 @@ ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))
 .pull-left[
 ```{r g6, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))) +
-  geom_bar(color = "blue", fill = "white") +
+  geom_bar(color = "#0000cd", fill = "#ffffff") +
   scale_y_continuous(labels = scales::percent) #<<
 ``` 
 ] 
@@ -1063,7 +1378,7 @@ ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))
 .pull-left[
 ```{r g7, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))) +
-  geom_bar(color = "blue", fill = "white") +
+  geom_bar(color = "#0000cd", fill = "#ffffff") +
   scale_y_continuous(labels = scales::percent) +
   geom_text( #<<
     stat = "count", #<<
@@ -1083,7 +1398,7 @@ ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))
 .pull-left[
 ```{r g8, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))) +
-  geom_bar(color = "blue", fill = "white") +
+  geom_bar(color = "#0000cd", fill = "#ffffff") +
   scale_y_continuous(labels = scales::percent) +
   geom_text(
     stat = "count", 
@@ -1149,7 +1464,7 @@ ggplot(dados1, aes(x = glicemia_jejum)) +
 .pull-left[
 ```{r g12, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = glicemia_jejum)) +
-  geom_histogram(color = "white") #<<
+  geom_histogram(color = "#ffffff") #<<
 ```
 ]
 
@@ -1163,7 +1478,7 @@ ggplot(dados1, aes(x = glicemia_jejum)) +
 .pull-left[
 ```{r g13, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = glicemia_jejum)) +
-  geom_histogram(color = "white", breaks = seq(90, 125, 5)) #<<
+  geom_histogram(color = "#ffffff", breaks = seq(90, 125, 5)) #<<
 ```
 ]
 
@@ -1177,7 +1492,7 @@ ggplot(dados1, aes(x = glicemia_jejum)) +
 .pull-left[
 ```{r g14, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = glicemia_jejum)) +
-  geom_histogram(color = "white", breaks = seq(90, 125, 5)) +
+  geom_histogram(color = "#ffffff", breaks = seq(90, 125, 5)) +
   labs( #<<
     title = "Frequência dos valores do exame de glicemia de jejum", #<<
     x = "Glicemia de jejum (em mg/dL)", #<<
@@ -1196,7 +1511,7 @@ ggplot(dados1, aes(x = glicemia_jejum)) +
 .pull-left[
 ```{r g15, paged.print=FALSE, eval=FALSE}
 ggplot(dados1, aes(x = glicemia_jejum)) +
-  geom_histogram(color = "white", breaks = seq(90, 125, 5)) +
+  geom_histogram(color = "#ffffff", breaks = seq(90, 125, 5)) +
   labs(
     title = "Frequência dos valores do exame de glicemia de jejum",
     x = "Glicemia de jejum (em mg/dL)",
@@ -1505,7 +1820,7 @@ ggplot(dados2, aes(x = gini, y = espvida)) +
   geom_point(size = 2, alpha = .5) +
   ggpubr::stat_cor( #<<
     aes(label = after_stat(r.label)), method = "pearson", #<<
-    label.x = 0.6, label.y = 78, size = 4.5, color = "red" #<<
+    label.x = 0.6, label.y = 78, size = 4.5, color = "#ff0000" #<<
   ) #<<
 ``` 
 ] 
@@ -1523,7 +1838,7 @@ ggplot(dados2, aes(x = gini, y = espvida)) +
   geom_point(size = 2, alpha = .5) +
   ggpubr::stat_cor( 
     aes(label = after_stat(r.label)), method = "pearson",
-    label.x = 0.6, label.y = 78, size = 4.5, color = "red"
+    label.x = 0.6, label.y = 78, size = 4.5, color = "#ff0000"
   ) +
   labs( #<<
     x = "Índice de Gini", #<<
@@ -1820,13 +2135,13 @@ dados1 |>
 
 ```{r}
 g1 <- ggplot(dados1, aes(x = imc_classe, y = after_stat(count)/sum(after_stat(count)))) +
-  geom_bar(color = "blue", fill = "white") +
+  geom_bar(color = "#0000cd", fill = "#ffffff") +
   scale_y_continuous(labels = scales::percent) +
   geom_text(stat = "count", aes(label = round(after_stat(count)/sum(after_stat(count)), 1) * 100, vjust = -1)) +
   labs(title = "Frequência do IMC categórico das gestantes", x = "IMC categórico", y = "Frequência")
 
 g2 <- ggplot(dados1, aes(x = glicemia_jejum)) +
-  geom_histogram(color = "white", breaks = seq(90, 125, 5)) +
+  geom_histogram(color = "#ffffff", breaks = seq(90, 125, 5)) +
   labs(title = "Frequência dos valores do exame de glicemia de jejum", x = "Glicemia de jejum (em mg/dL)", y = "Frequência") +
   theme_bw() 
 ```
@@ -1865,7 +2180,7 @@ ggsave("graficos/univariados.png", width = 16, height = 10)
 
 <br> 
 
-- <font color="red">Importante!</font> Por padrão, a função `ggsave( )` salva o último gráfico que foi rodado em seu editor ou console.
+- <font color="#ff0000">Importante!</font> Por padrão, a função `ggsave( )` salva o último gráfico que foi rodado em seu editor ou console.
 
 - É possível salvar em vários formatos, como TEX, PDF, JPEG, TIFF, PNG e SVG.
 
