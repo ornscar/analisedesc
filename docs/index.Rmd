@@ -95,7 +95,7 @@ knitr::include_graphics("img/perfil.png")
 
 - O pacote `{gtsummary}.`
 
-- Tabelas com frequências relativas e absolutas e medidas-resumos.
+- Tabela com frequências relativas e absolutas e medidas-resumos.
 ]
 
 .pull-right[
@@ -125,19 +125,25 @@ class: middle, center, inverse
 
 - A base de dados é sobre **gestantes diagnosticadas com diabetes gestacional** que realizaram o pré-natal entre os anos de 2012 a 2015 no Hospital das Clínicas da Universidade de São Paulo.
 
-- Contém **408 observações** e **8 variáveis**, a saber:
-
-> `ano`: ano em que a gestante realizou o pré-natal;
+- Contém **408 observações** e **10 variáveis**, a saber:
 
 > `idade`: idade da gestante;
 
-> `cor`: Tabagista da gestante;
+> `imc_classe`: IMC categórico;
 
 > `n_gestacoes`: número de gestações anteriores;
 
-> `imc_classe`: IMC categórico;
+> `hist_diab_fam`: histórico de diabetes na família;
 
-> `hb_glicada`: exame de hemoglobina glicada categórico;
+> `hist_diab_gest`: histórico de diabetes gestacional;
+
+---
+
+> `macrossomia_fetal`: antecedente de macrossomia fetal;
+
+> `tabagista`: indicador de tabagista;
+
+> `hac`: indicador de hipertensão;
 
 > `glicemia_jejum`: valor do exame de glicemia de jejum (em mg/dL);
 
@@ -361,7 +367,7 @@ sd(dados2$gini)
 
 ```{r}
 # medidas-resumo de todas as vas
-summary(dados1[, c("idade", "n_gestacoes", "glicemia_jejum")])
+summary(dados1[ , c("idade", "n_gestacoes", "glicemia_jejum")])
 
 # medidas-resumo da va 'idade'
 summary(dados1$idade)
