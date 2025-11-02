@@ -224,7 +224,7 @@ prop.table(freq_abs_na)
 
 <br>
 <div class="callout-tip">
-<b>Dica!</b><br><br>Use a função round() para ar#ff0000ondar os valores. Por exemplo, round(prop.table(freq_abs), 2).
+<b>Dica!</b><br><br>Use a função round() para arredondar os valores. Por exemplo, round(prop.table(freq_abs), 2).
 </div>
 
 ---
