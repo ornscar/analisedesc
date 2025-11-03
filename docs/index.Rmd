@@ -581,7 +581,7 @@ dados1 |>
         "{min}, {max}" # minimo e maximo                            
       ),                                                            
       all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
-    ),                                                               
+    ),
     # formatando numero de digitos
     digits = list(                                                  #<<
       all_continuous() ~ 2, # 2 digitos p/ vas quantitativas        #<<
@@ -603,6 +603,53 @@ dados1 |>
 
 .pull-left[
 ```{r t7, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum, insulina),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                              
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
+      insulina ~ "Usou insulina antes do parto"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),                                                               
+    # formatando numero de digitos
+    digits = list(                                                  
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas        
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %  
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA" #<<
+  ) |> 
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t7-out, ref.label="t7", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t8, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # incluindo apenas as variaveis de interesse
@@ -633,61 +680,14 @@ dados1 |>
       all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
     ),
     # alterando rotulo dos valores faltantes
-    missing_text = "NA" #<<
+    missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |>  #<<
   # ignorar (apenas para efeitos de visualizacao no slide)
   as_gt() |>        
   compacta_tabela()
 ``` 
-] 
-
-.pull-right[
-```{r t7-out, ref.label="t7", out.width="90%", echo=FALSE, message=FALSE}
-```
-]
-
----
-
-.pull-left[
-```{r t8, paged.print=FALSE, eval=FALSE}
-dados1 |> 
-  tbl_summary(
-    # incluindo apenas as variaveis de interesse
-    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum, insulina),
-    # rotulando as variaveis
-    label = list(                                            
-      idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                                  
-      n_gestacoes ~ "N° de gestações anteriores",            
-      hist_diab_fam ~ "Histórico de diabetes na família",    
-      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
-      insulina ~ "Usou insulina antes do parto"
-    ),
-    # dispondo cada medida em uma linha
-    type = all_continuous() ~ "continuous2", 
-    # calculando as medidas de interesse     
-    statistic = list(                                                                                  
-      all_continuous() ~  c(                                        
-        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
-        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
-        "{min}, {max}" # minimo e maximo                            
-      ),                                                            
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
-    ),        
-    # formatando numero de digitos
-    digits = list(
-      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
-      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
-    ),
-    # alterando rotulo dos valores faltantes
-    missing_text = "NA"
-  ) |>
-  # incluindo o numero total de observacoes validas
-  add_n() |>  #<<
-  # ignorar (apenas para efeitos de visualizacao no slide)
-  as_gt() |>        
-  compacta_tabela()
-```  
 ] 
 
 .pull-right[
@@ -730,15 +730,15 @@ dados1 |>
     ),
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
-  ) |> 
+  ) |>
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |>
   # incluindo numero total de observacoes validas
-  add_n() |> 
-  # modificando os nomes do cabecalho
-  modify_header(label ~ "**Variável**") |> #<<
+  add_n() |> #<<
   # ignorar (apenas para efeitos de visualizacao no slide)
   as_gt() |>        
   compacta_tabela()
-``` 
+```  
 ] 
 
 .pull-right[
@@ -750,6 +750,59 @@ dados1 |>
 
 .pull-left[
 ```{r t10, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum, insulina),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                  
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)",
+      insulina ~ "Usou insulina antes do parto"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t10-out, ref.label="t10", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t11, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # incluindo apenas as variaveis de interesse
@@ -782,6 +835,8 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
   # incluindo numero total de observacoes validas
   add_n() |> 
   # modificando os nomes do cabecalho
@@ -795,14 +850,14 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t10-out, ref.label="t10", out.width="90%", echo=FALSE, message=FALSE}
+```{r t11-out, ref.label="t11", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t11, paged.print=FALSE, eval=FALSE}
+```{r t12, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
@@ -836,6 +891,8 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
   # incluindo numero total de observacoes validas
   add_n() |> 
   # modificando os nomes do cabecalho
@@ -849,14 +906,14 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t11-out, ref.label="t11", out.width="90%", echo=FALSE, message=FALSE}
+```{r t12-out, ref.label="t12", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t12, paged.print=FALSE, eval=FALSE}
+```{r t13, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
@@ -890,6 +947,8 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
   # incluindo numero total de observacoes validas
   add_n() |> 
   # modificando os nomes do cabecalho
@@ -905,14 +964,14 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t12-out, ref.label="t12", out.width="90%", echo=FALSE, message=FALSE}
+```{r t13-out, ref.label="t13", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t13, paged.print=FALSE, eval=FALSE}
+```{r t14, paged.print=FALSE, eval=FALSE}
 # traduzindo a tabela para pt-br
 theme_gtsummary_language("pt", big.mark = ".", decimal.mark = ",") #<<
 
@@ -949,72 +1008,16 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
   bold_labels() |> 
   # adicionando rótulo para estratificacao
   modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
-  # ignorar (apenas para efeitos de visualizacao no slide)
-  as_gt() |>        
-  compacta_tabela()
-``` 
-] 
-
-.pull-right[
-```{r t13-out, ref.label="t13", out.width="90%", echo=FALSE, message=FALSE}
-```
-]
-
----
-
-.pull-left[
-```{r t14, paged.print=FALSE, eval=FALSE}
-dados1 |> 
-  tbl_summary(
-    # analisando por grupo de desfecho
-    by = insulina,
-    # incluindo apenas as variaveis de interesse
-    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
-    # rotulando as variaveis
-    label = list(                                            
-      idade ~ "Idade (anos)",                                
-      imc_classe ~ "IMC",                                
-      n_gestacoes ~ "N° de gestações anteriores",            
-      hist_diab_fam ~ "Histórico de diabetes na família",    
-      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
-    ),
-    # dispondo cada medida em uma linha
-    type = all_continuous() ~ "continuous2", 
-    # calculando as medidas de interesse     
-    statistic = list(                                                                                  
-      all_continuous() ~  c(                                        
-        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
-        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
-        "{min}, {max}" # minimo e maximo                            
-      ),                                                            
-      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
-    ),        
-    # formatando numero de digitos
-    digits = list(
-      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
-      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
-    ),
-    # alterando rotulo dos valores faltantes
-    missing_text = "NA"
-  ) |> 
-  # modificando os nomes do cabecalho
-  modify_header(label ~ "**Variável**") |> 
-  # formatando nomes das variaveis para negrito
-  bold_labels() |> 
-  # adicionando rótulo para estratificacao
-  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
-  # adicionando rodape no cabecalho
-  modify_footnote_header( #<<
-    footnote = "Gestantes que realizaram o pré-natal entre os anos de 2012 e 2015.", #<<
-    columns = all_stat_cols(), #<<
-    replace = FALSE #<<
-  ) |> #<<
   # ignorar (apenas para efeitos de visualizacao no slide)
   as_gt() |>        
   compacta_tabela()
@@ -1063,6 +1066,74 @@ dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
+  # modificando os nomes do cabecalho
+  modify_header(label ~ "**Variável**") |> 
+  # formatando nomes das variaveis para negrito
+  bold_labels() |> 
+  # adicionando rótulo para estratificacao
+  modify_spanning_header(c("stat_1", "stat_2") ~ "**Usou insulina antes do parto**") |> 
+  # adicionando rodape no cabecalho
+  modify_footnote_header( #<<
+    footnote = "Gestantes que realizaram o pré-natal entre os anos de 2012 e 2015.", #<<
+    columns = all_stat_cols(), #<<
+    replace = FALSE #<<
+  ) |> #<<
+  # ignorar (apenas para efeitos de visualizacao no slide)
+  as_gt() |>        
+  compacta_tabela()
+``` 
+] 
+
+.pull-right[
+```{r t15-out, ref.label="t15", out.width="90%", echo=FALSE, message=FALSE}
+```
+]
+
+---
+
+.pull-left[
+```{r t16, paged.print=FALSE, eval=FALSE}
+dados1 |> 
+  tbl_summary(
+    # analisando por grupo de desfecho
+    by = insulina,
+    # incluindo apenas as variaveis de interesse
+    include = c(idade, imc_classe, n_gestacoes, hist_diab_fam, glicemia_jejum),
+    # rotulando as variaveis
+    label = list(                                            
+      idade ~ "Idade (anos)",                                
+      imc_classe ~ "IMC",                                
+      n_gestacoes ~ "N° de gestações anteriores",            
+      hist_diab_fam ~ "Histórico de diabetes na família",    
+      glicemia_jejum ~ "Valor do exame de glicemia (mg/dL)"
+    ),
+    # dispondo cada medida em uma linha
+    type = all_continuous() ~ "continuous2", 
+    # calculando as medidas de interesse     
+    statistic = list(                                                                                  
+      all_continuous() ~  c(                                        
+        "{mean} ± {sd}", # media e dp p/ vas quantitativas          
+        "{median} ({p25}, {p75})", # mediana e 1 e 3 quartis        
+        "{min}, {max}" # minimo e maximo                            
+      ),                                                            
+      all_categorical() ~ "{n} ({p}%)" # n e % p/ vas qualitativas  
+    ),        
+    # formatando numero de digitos
+    digits = list(
+      all_continuous() ~ 2, # 2 digitos p/ vas quantitativas
+      all_categorical() ~ c(0, 1) # 0 digitos p/ n e 1 digito p/ %
+    ),
+    # alterando rotulo dos valores faltantes
+    missing_text = "NA"
+  ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
@@ -1088,14 +1159,14 @@ dados1 |>
 ] 
 
 .pull-right[
-```{r t15-out, ref.label="t15", out.width="90%", echo=FALSE, message=FALSE}
+```{r t16-out, ref.label="t16", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
 ---
 
 .pull-left[
-```{r t16, paged.print=FALSE, eval=FALSE}
+```{r t17, paged.print=FALSE, eval=FALSE}
 tbl <- dados1 |> 
   tbl_summary(
     # analisando por grupo de desfecho
@@ -1129,6 +1200,10 @@ tbl <- dados1 |>
     # alterando rotulo dos valores faltantes
     missing_text = "NA"
   ) |> 
+  # calculando ic95%
+  add_ci(pattern = "{stat} [{ci}]") |> 
+  # incluindo numero total de observacoes validas
+  add_n() |> 
   # modificando os nomes do cabecalho
   modify_header(label ~ "**Variável**") |> 
   # formatando nomes das variaveis para negrito
@@ -1160,7 +1235,7 @@ tbl
 ] 
 
 .pull-right[
-```{r t16-out, ref.label="t16", out.width="90%", echo=FALSE, message=FALSE}
+```{r t17-out, ref.label="t17", out.width="90%", echo=FALSE, message=FALSE}
 ```
 ]
 
