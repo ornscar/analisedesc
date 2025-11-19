@@ -1617,7 +1617,7 @@ ggplot(dados1, aes(x = glicemia_jejum)) +
 ```{r g16, paged.print=FALSE, eval=FALSE}
 dados1 |> 
   dplyr::filter(!is.na(hist_diab_fam)) |> 
-  ggplot(aes(x = hist_diab_fam)) #<<
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) #<<
 ``` 
 ] 
 
