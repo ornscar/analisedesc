@@ -1727,8 +1727,8 @@ dados1 |>
 .pull-left[
 ```{r g22, paged.print=FALSE, eval=FALSE, message=FALSE}
 dados1 |> 
-  dplyr::filter(!is.na(tabagista)) |> 
-  ggplot(aes(x = tabagista, fill = insulina)) #<<
+  dplyr::filter(!is.na(hist_diab_fam)) |> 
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) #<<
 ``` 
 ] 
 
@@ -1742,8 +1742,8 @@ dados1 |>
 .pull-left[
 ```{r g23, paged.print=FALSE, eval=FALSE, message=FALSE}
 dados1 |> 
-  dplyr::filter(!is.na(tabagista)) |> 
-  ggplot(aes(x = tabagista, fill = insulina)) +
+  dplyr::filter(!is.na(hist_diab_fam)) |> 
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) +
     geom_bar(position = "stack") #<<
 ``` 
 ] 
@@ -1758,8 +1758,8 @@ dados1 |>
 .pull-left[
 ```{r g24, paged.print=FALSE, eval=FALSE, message=FALSE}
 dados1 |> 
-  dplyr::filter(!is.na(tabagista)) |> 
-  ggplot(aes(x = tabagista, fill = insulina)) +
+  dplyr::filter(!is.na(hist_diab_fam)) |> 
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) +
     geom_bar(position = "fill") #<<
 ``` 
 ] 
@@ -1774,8 +1774,8 @@ dados1 |>
 .pull-left[
 ```{r g25, paged.print=FALSE, eval=FALSE, message=FALSE}
 dados1 |> 
-  dplyr::filter(!is.na(tabagista)) |> 
-  ggplot(aes(x = tabagista, fill = insulina)) +
+  dplyr::filter(!is.na(hist_diab_fam)) |> 
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) +
     geom_bar(position = "fill") +
     scale_y_continuous(labels = scales::percent) #<<
 ``` 
@@ -1791,12 +1791,12 @@ dados1 |>
 .pull-left[
 ```{r g26, paged.print=FALSE, eval=FALSE, message=FALSE}
 dados1 |> 
-  dplyr::filter(!is.na(tabagista)) |> 
-  ggplot(aes(x = tabagista, fill = insulina)) +
+  dplyr::filter(!is.na(hist_diab_fam)) |> 
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) +
     geom_bar(position = "fill") +
     scale_y_continuous(labels = scales::percent) +
     labs(#<<
-      x = "Tabagista", #<<
+      x = "Histórico de diabetes na família", #<<
       y = "Frequência", #<<
       fill = "Usou insulina?" #<<
     ) #<<
@@ -1813,12 +1813,12 @@ dados1 |>
 .pull-left[
 ```{r g27, paged.print=FALSE, eval=FALSE, message=FALSE}
 dados1 |> 
-  dplyr::filter(!is.na(tabagista)) |> 
-  ggplot(aes(x = tabagista, fill = insulina)) +
+  dplyr::filter(!is.na(hist_diab_fam)) |> 
+  ggplot(aes(x = hist_diab_fam, fill = insulina)) +
     geom_bar(position = "fill") +
     scale_y_continuous(labels = scales::percent) +
     labs(
-      x = "Tabagista",
+      x = "Histórico de diabetes na família",
       y = "Frequência", 
       fill = "Usou insulina?" 
     ) + 
